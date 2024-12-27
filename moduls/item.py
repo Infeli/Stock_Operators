@@ -19,13 +19,17 @@ class Item:
     @classmethod
     def view_stock(cls):
         print("ID  Name  Size  Stock")
-        for item in cls.list_of_Items:
-            print(f"{cls.list_of_Items.index(item)}  {item.item_name}  {item.size}    {item.stock}")
+        for index, item in enumerate(cls.list_of_Items):
+            print(f"{index}  {item.item_name}  {item.size}    {item.stock}")
+
 
 
     @classmethod
     def change_stock(cls, item_index):
-        cls.item_index = int(item_index)
-        item = cls.list_of_Items[cls.item_index]
-        item_stock_change = input("Zadejte nový stock: ")
-        item.stock = item_stock_change
+        try:
+            cls.item_index = int(item_index)
+            item = cls.list_of_Items[cls.item_index]
+            item_stock_change = input("Zadejte nový stock: ")
+            item.stock = item_stock_change
+        except IndexError:
+            print(f"Item with index {item_index} does not exist!")
