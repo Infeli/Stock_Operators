@@ -1,10 +1,4 @@
-
-"""
-HR - může vytvářet, editovat, mazat, zobrazovat operatory + zobrazovat items
-Buyer - může vytvářet, editovat, mazat, zobrazovat item + zobrazovat Operatory
-"""
 import hashlib
-
 
 class User:
     USER_TYPE = ["HR", "Buyer"]
@@ -40,3 +34,26 @@ class User:
             if user.login == login and user.password == hashed_password:
                 return user
         return None
+
+"""
+HR - může vytvářet, editovat, mazat, zobrazovat operatory + zobrazovat items
+Buyer - může vytvářet, editovat, mazat, zobrazovat item + zobrazovat Operatory
+"""
+class PermissionManager:
+    def __init__(self, user):
+        self.user = user
+
+    def can_change_operator(self):
+        return self.user.user_type == "HR"
+
+    def can_change_stock(self):
+        return self.user.user_type == "Buyer"
+
+    def can_create_item(self):
+        return self.user.user_type == "Buyer"
+
+    def can_create_operator(self):
+        return self.user.user_type == "HR"
+
+    def can_assign_item(self):
+        return self.user.user_type == "HR"

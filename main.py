@@ -1,7 +1,6 @@
-from moduls.user import User
+from moduls.user import User, PermissionManager
 from moduls.item import Item
 from moduls.operator import Operator
-
 
 operator_Pavel = Operator("Pavel", "Novák", "2000-12-19")
 operator_Jiri = Operator("Jiri", "Bubák", "1990-12-9")
@@ -13,18 +12,15 @@ mikina = Item("Mikina", "L", 10)
 tricko = Item("Tričko", "XL", 20)
 
 
-
 if __name__ == "__main__":
 
     # login check
-
     login = input("Zadej login: ")
     heslo = input("Zadej heslo: ")
-
     current_user = User.user_check(login=login, password=heslo)
+    permission = PermissionManager(current_user)
 
     if current_user:
-        print(current_user.user_type)
 
         while True:
             user_choice = input("----------------------------------\n"
@@ -45,19 +41,19 @@ if __name__ == "__main__":
                 case "b":
                     Operator.view_list_of_operators()
                 case "c":
-                    if current_user.user_type == "HR":
+                    if permission.can_change_operator():
                         op_id = input("Jakého operátora chcete změnit?")
                         Operator.edit_operator(operator_index=op_id)
                     else:
                         print("You have no permission to change the operator!")
                 case "d":
-                    if current_user.user_type == "Buyer":
-                        item_id = input("Jaký item chcete změnit?")
+                    if permission.can_change_stock():
+                        item_id = input("U jakého itemu chcete změnit stock?")
                         Item.change_stock(item_index=item_id)
                     else:
                         print("You have no permission to change the stock!")
                 case "e":
-                    if current_user.user_type == "Buyer":
+                    if permission.can_create_item():
                         item_name = input("Item name: ")
                         item_size = input("Item size: ")
                         item_stock = input("Item stock: ")
@@ -65,7 +61,7 @@ if __name__ == "__main__":
                     else:
                         print("You have no permission to create item!")
                 case "f":
-                    if current_user.user_type == "HR":
+                    if permission.can_create_operator():
                         op_name = input("Jmeno: ")
                         op_lastN = input("Prijmeni: ")
                         op_date = input("Datum narození: ")
@@ -73,7 +69,7 @@ if __name__ == "__main__":
                     else:
                         print("You have no permission to create operator!")
                 case "g":
-                    if current_user.user_type == "HR":
+                    if permission.can_assign_item():
                         op_id = input("ID operátora: ")
                         item_id = input("ID itemu: ")
                         quantity = int(input("Počet kusů: "))
